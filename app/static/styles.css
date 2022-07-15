@@ -18,6 +18,10 @@ body {
     list-style: none;
 }
 
+.nav-item {
+    padding: 0 10px;
+}
+
 .container {
     
     padding: 20px;

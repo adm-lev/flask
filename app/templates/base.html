@@ -12,9 +12,9 @@
 <body>
     <div class="header container">
         <ul class="navigation">
-            <li><span>Brand</span></li>
-            <li><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
+            <li class="nav-item"><a href="{{ url_for('index') }}">Flask</a></li>
+            <li class="nav-item"><a href="{{ url_for('posts.index') }}">Blog</a></li>
+            <li class="nav-item"><a href="#">Link</a></li>
         </ul>        
         <form action="" class="search-form">
             <input type="text" placeholder="Search">
