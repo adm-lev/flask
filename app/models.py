@@ -33,6 +33,8 @@ class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     slug = db.Column(db.String(100))
+    test_fied = db.Column(db.String(100))
+    test_fied1 = db.Column(db.String(100))
 
     def __init__(self, *args, **kwargs):
         super(Tag, self).__init__(*args, **kwargs)
