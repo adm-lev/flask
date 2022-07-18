@@ -10,7 +10,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-  
+  <div class="header container">
+    <ul class="navigation">
+    {% for item in menu %}
+        
+        <li class="nav-item"><a href="{{ item.url }}">{{ item.name }}</a></li>
+    
+    {% endfor %}
+    </ul>
+  </div>
     <div class="middle container">
         
         {% block content_title %}
