@@ -8,6 +8,7 @@
 
     <form action="{{ url_for('addPost') }}" method="POST" class="form-contact">
         <p><label>Article title: </label><input type="text" name="name" value="" required></p>
+        <p><label>Article URL: </label><input type="text" name="url" value="" required></p>
         <p><label>Artickle text: </label></p>
         <p><textarea name="post" cols="40" rows="7"></textarea></p>
         <p><input type="submit" value="Add"></p>

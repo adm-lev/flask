@@ -11,13 +11,16 @@
 </head>
 <body>
   <div class="header container">
-    <ul class="navigation">
-    {% for item in menu %}
-        
-        <li class="nav-item"><a href="{{ item.url }}">{{ item.title }}</a></li>
     
-    {% endfor %}
+    <ul class="navigation">
+        {% for p in menu %}
+        
+            <li class="nav-item"><a href="{{ p.url }}">{{ p.title }}</a></li>
+        
+        {% endfor %}
     </ul>
+    
+   
   </div>
     <div class="middle container">
         
