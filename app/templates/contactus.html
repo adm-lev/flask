@@ -9,8 +9,8 @@ contactus page
 {% endblock content_title %}
 
 {% block content %}
-     {% for msg in get_flashed_messages() %}
-     <div class="flash">{{ msg }}</div>
+     {% for cat, msg in get_flashed_messages(True) %}
+     <div class="flash {{ cat }}">{{ msg }}</div>
      {% endfor %}
     <form action="/contact" method="POST" class="form-contact">
         <p><label>Name: </label><input type="text" name="username" value="" required></p>

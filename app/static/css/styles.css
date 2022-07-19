@@ -28,6 +28,13 @@ body {
     padding: 20px;
 }
 
-.flash {
+.error {
     color:orangered;
 }
+
+.success {
+    color:lightseagreen;
+}
+
+
+
