@@ -9,5 +9,14 @@
 {% endblock content_title %}
 
 {% block content %}
-     content
+     <hr>
+     <h2>Articles list</h2>
+     <ul class="list-posts">
+          {% for p in posts %}
+          <li>
+               <p class="title"><a href="{{ url_for('showPost', id_post=p.id) }}">{{ p.title }}</a></p>
+               <p class="annocne">{{ p.text[:50] }}</p>
+          </li>
+          {% endfor %}
+     </ul>
 {% endblock content %}
