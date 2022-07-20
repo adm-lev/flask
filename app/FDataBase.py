@@ -1,3 +1,4 @@
+from re import T
 import time
 import math
 import sqlite3
@@ -44,7 +45,7 @@ class FDataBase:
             self.__cur.execute(f'SELECT title, text FROM posts WHERE url LIKE "{alias}" LIMIT 1')
             res = self.__cur.fetchone()
             if res:
-                base = url_for('static', folename='images') 
+                base = url_for('static', filename='images') 
                 return res 
         except sqlite3.Error as e:
             print(f'Error getting data {str(e)}')
@@ -59,3 +60,20 @@ class FDataBase:
         except sqlite3.Error as e:
             print(f'Error getting data {str(e)}')
         return []
+
+    def addUser(self, name, email, hpsw):
+        try:
+            self.__cur.execute(f"SELECT COUNT() as `count` FROM users WHERE email LIKE '{email}'")
+            res = self.__cur.fetchone()
+            if res['count'] > 0:
+                print('user with this email is olready exist')
+                return False
+
+            tm = math.floor(time.time())
+            self.__cur.execute('INSERT INTO users VALUES(NULL, ?, ?, ?, ?)', (name, email, hpsw, tm))
+            self.__db.commit()
+        except sqlite3.Error as e:
+            print(f'error {e}')
+            return False
+            
+        return True

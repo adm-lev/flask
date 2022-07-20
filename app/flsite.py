@@ -5,8 +5,9 @@ import os
 import sqlite3
 # from requests import session
 from config import Configuration
-from flask import Flask, render_template, url_for, request, session, flash, redirect, abort, g
+from flask import Flask, render_template, url_for, request, session, flash, redirect, abort, g, redirect
 from FDataBase import FDataBase
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 app = Flask(__name__)
@@ -33,16 +34,24 @@ def get_db():
         g.link_db = connect_db()
     return g.link_db
 
-@app.route('/')
-def index():
+dbase = None
+
+@app.before_request
+def before_request():
+
+    global dbase
     db = get_db()
     dbase = FDataBase(db)
+
+
+@app.route('/')
+def index():
+    
     return render_template('index.html', menu=dbase.getMenu(), posts=dbase.getPostsAnonce())
 
 @app.route('/add_post', methods=['POST', 'GET'])
 def addPost():
-    db = get_db()
-    dbase = FDataBase(db)
+    
 
     if request.method == 'POST':
         if len(request.form['name']) > 4 and len(request.form['post']) > 10:
@@ -58,13 +67,34 @@ def addPost():
 
 @app.route('/post/<alias>')
 def showPost(alias):
-    db = get_db()
-    dbase = FDataBase(db)
+    
     title, post = dbase.getPost(alias)
     if not title:
         abort(404)
 
     return render_template('post.html', menu=dbase.getMenu(), title=title, post=post)
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    return render_template('login.html', menu=dbase.getMenu(), title='Authorisation')
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    if request.method == 'POST':
+        if len(request.form['name']) > 4 and len(request.form['email']) > 4 \
+            and len(request.form['psw']) > 4 and request.form['psw'] == request.form['psw2']:
+            hash = generate_password_hash(request.form['psw'])
+            res = dbase.addUser(request.form['name'], request.form['email'], hash)
+            if res:
+                flash('register sucseed')
+                return redirect(url_for('login'))
+            else:
+                flash('register fail')
+        else:
+            flash('wrong field info')
+
+    return render_template('register.html', menu=dbase.getMenu(), title='Registration')
+
 
 @app.teardown_appcontext
 def close_db(error):
