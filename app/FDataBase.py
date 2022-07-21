@@ -75,5 +75,33 @@ class FDataBase:
         except sqlite3.Error as e:
             print(f'error {e}')
             return False
-            
+
         return True
+
+    def getUser(self, user_id):
+        try:
+            self.__cur.execute(f'SELECT * FROM users WHERE id = {user_id} LIMIT 1')
+            res = self.__cur.fetchone()
+            if not res:
+                print('user doesnt found')
+                return False
+
+            return res
+        except sqlite3.Error as e:
+            print(f'error giving data from bd {str(e)}')
+
+        return False
+
+    def getUserByEmail(self, email):
+        try:
+            self.__cur.execute(f"SELECT * FROM users WHERE email LIKE '{email}' LIMIT 1")
+            res = self.__cur.fetchone()
+            if not res:
+                print('user not found')
+                return False
+
+            return res
+        except sqlite3.Error as e:
+            print(f'yoyo error getting data from db {str(e)}')
+
+        return False

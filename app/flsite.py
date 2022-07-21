@@ -3,18 +3,26 @@ from statistics import mode
 from unicodedata import category
 import os
 import sqlite3
+
 # from requests import session
 from config import Configuration
 from flask import Flask, render_template, url_for, request, session, flash, redirect, abort, g, redirect
 from FDataBase import FDataBase
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from UserLogin import UserLogin
 
 
 app = Flask(__name__)
 app.config.from_object(Configuration)
-
-
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'flsite.db')))
+
+login_manager = LoginManager(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    print('load user')
+    return UserLogin().fromDB(user_id, dbase)
 
 def connect_db():
     conn = sqlite3.connect(app.config['DATABASE'])
@@ -66,6 +74,7 @@ def addPost():
     return render_template('add_post.html', menu=dbase.getMenu(), title='Adding page')
 
 @app.route('/post/<alias>')
+@login_required
 def showPost(alias):
     
     title, post = dbase.getPost(alias)
@@ -76,6 +85,19 @@ def showPost(alias):
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('profile'))
+
+    if request.method == 'POST':
+        user = dbase.getUserByEmail(request.form['email'])
+        if user and check_password_hash(user['psw'], request.form['psw']):
+            userlogin = UserLogin().create(user)
+            rm = True if request.form.get('remainme') else False
+            login_user(userlogin, remember=rm)
+            return redirect(request.args.get('next') or url_for('profile'))
+
+        flash('wrong credentials')
+
     return render_template('login.html', menu=dbase.getMenu(), title='Authorisation')
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -101,7 +123,18 @@ def close_db(error):
     if hasattr(g, 'link_db'):
         g.link_db.close()
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('you exited success')
+    return redirect(url_for('login'))
 
+@app.route('/profile')
+@login_required
+def profile():
+    return f'''<p><a href="{url_for('logout')}">Exit from profile</a></p>
+                <p>user info: {current_user.get_id()}</p>'''
 
 
 
