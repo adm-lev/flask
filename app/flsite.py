@@ -4,7 +4,7 @@ from unicodedata import category
 import os
 import sqlite3
 from config import Configuration
-from flask import Flask, render_template, url_for, request, session, flash, redirect, abort, g, redirect
+from flask import Flask, render_template, url_for, request, session, flash, redirect, abort, g, redirect, make_response
 from FDataBase import FDataBase
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -133,7 +133,16 @@ def logout():
 def profile():
     return render_template('profile.html', menu=dbase.getMenu(), title='Profile')
 
+@app.route('/userava')
+@login_required
+def userava():
+    img = current_user.getAvatar(app)
+    if not img:
+        return ''
 
+    h = make_response(img)
+    h.headers['Content-Type'] = 'image/png'
+    return h
 
 if __name__ == '__main__':
 

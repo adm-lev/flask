@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+   {% for cat, msg in get_flashed_messages(True) %}
+    <div class="flash {{ cat }}">{{ msg }}</div>
+   {% endfor %}
+
+    <ul>
+        <li>
+            <div><img src="{{ url_for('userava') }}" alt=""></div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                <p><input type="file" name="file"></p>
+                <p><input type="submit" value="load"></p>
+            </form>
+        </li>
+        <li>
+            <p><a href="{{ url_for('logout') }}">Exit profile</a></p>
+            <ul>
+                <li>Name: {{ current_user.getName() }}</li>
+                <li>Email: {{ current_user.getEmail() }}</li>
+            </ul>
+        </li>
+    </ul>
+{% endblock content %}

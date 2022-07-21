@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+from flask import url_for
 
 
 class UserLogin(UserMixin):
@@ -11,14 +12,24 @@ class UserLogin(UserMixin):
         self.__user = user
         return self
 
-    # def is_authenticated(self):
-    #     return True
-
-    # def is_active(self):
-    #     return True
-
-    # def is_anonimous(self):
-    #     return False
-
     def get_id(self):
         return str(self.__user['id'])
+
+    def getName(self):
+        return self.__user['name'] if self.__user else 'without name'
+
+    def getEmail(self):
+        return self.__user['email'] if self.__user else 'without email'
+
+    def getAvatar(self, app):
+        img = None
+        if not self.__user['avatar']:
+            try:
+                with app.open_resource(app.root_path + url_for('static', filename='images/default.png'), 'rb') as f:
+                    img = f.read()
+            except FileNotFoundError as e:
+                print(f'not found image: {str(e)}')
+        else:
+            img = set.__user['avatar']
+
+        return img
