@@ -3,8 +3,6 @@ from statistics import mode
 from unicodedata import category
 import os
 import sqlite3
-
-# from requests import session
 from config import Configuration
 from flask import Flask, render_template, url_for, request, session, flash, redirect, abort, g, redirect
 from FDataBase import FDataBase
@@ -133,8 +131,7 @@ def logout():
 @app.route('/profile')
 @login_required
 def profile():
-    return f'''<p><a href="{url_for('logout')}">Exit from profile</a></p>
-                <p>user info: {current_user.get_id()}</p>'''
+    return render_template('profile.html', menu=dbase.getMenu(), title='Profile')
 
 
 
