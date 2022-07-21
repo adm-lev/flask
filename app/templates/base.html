@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+        Document
+        {% endblock title %}    
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <div class="header container">
+    
+    <ul class="navigation">
+        {% for p in menu %}
+        
+            <li class="nav-item"><a href="{{ p.url }}">{{ p.title }}</a></li>
+        
+        {% endfor %}
+    </ul>
+    
+   
+  </div>
+    <div class="middle container">
+        
+        {% block content_title %}
+
+        {% endblock content_title %}
+
+    
+        {% block content %}
+            <h2>Hello template</h2>
+        {% endblock content %}        
+    
+    
+    </div>
+    <div class="footer container">
+        {% block footer %}
+            <p>footer</p>
+        {% endblock footer %}
+    
+    </div>
+</body>
+</html>
